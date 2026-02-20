@@ -1,0 +1,6 @@
+[submodule "TechKart-Frontend"]
+	path = TechKart-Frontend
+	url = https://github.com/Anujahirwar01/TechKart-Frontend.git
+[submodule "TechKart-Server"]
+	path = TechKart-Server
+	url = https://github.com/Anujahirwar01/TechKart-Server.git
