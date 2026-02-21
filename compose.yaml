@@ -33,9 +33,7 @@ services:
       - 8001:8001
   
   server:
-    build:
-      context: ./TechKart-Server
-      dockerfile: Dockerfile.dev
+    image: docker pull anujahirwar01/techkart-server:latest
     container_name: techkart-server
     ports:
       - "4000:4000"
@@ -57,9 +55,7 @@ services:
           action: sync
  
   client:
-    build:
-      context: ./TechKart-Frontend
-      dockerfile: Dockerfile.dev
+    image: docker pull anujahirwar01/techkart-frontend:latest
     container_name: techkart-client
     ports:
       - "5173:5173"
