@@ -33,29 +33,22 @@ services:
       - 8001:8001
   
   server:
-    image: docker pull anujahirwar01/techkart-server:latest
+    image: anujahirwar01/techkart-server:latest
     container_name: techkart-server
     ports:
       - "4000:4000"
     env_file:
       - ./TechKart-Server/.env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - MONGO_URI=mongodb://admin:password@mongodb:27017/techkart?authSource=admin
       - REDIS_URI=redis://redis:6379
     depends_on:
       - mongodb
       - redis
-    develop:
-      watch:
-        - path: ./TechKart-Server/package*.json
-          action: rebuild
-        - path: ./TechKart-Server/src
-          target: /app/src
-          action: sync
  
   client:
-    image: docker pull anujahirwar01/techkart-frontend:latest
+    image: anujahirwar01/techkart-frontend:latest
     container_name: techkart-client
     ports:
       - "5173:5173"
@@ -63,13 +56,6 @@ services:
       - ./TechKart-Frontend/.env
     depends_on:
       - server
-    develop:
-      watch:
-        - path: ./TechKart-Frontend/package*.json
-          action: rebuild
-        - path: ./TechKart-Frontend/src
-          target: /app/src
-          action: sync
   
 volumes:
   mongodb_data:
