@@ -9,7 +9,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - mongodb_data:/data/db
-    
+
   mongo-express:
     image: mongo-express
     container_name: mongo-express
@@ -23,39 +23,57 @@ services:
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongodb
-    
+
   redis:
     image: redis/redis-stack
     container_name: redis
     ports:
       - 6379:6379
       - 8001:8001
-  
+
   server:
-    image: anujahirwar01/techkart-server:latest
+    build:
+      context: ./TechKart-Server
+      dockerfile: Dockerfile.dev
     container_name: techkart-server
-    restart: unless-stopped
     ports:
       - "4000:4000"
     env_file:
-      - ./server.env
+      - ./TechKart-Server/.env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - MONGO_URI=mongodb://admin:password@mongodb:27017/techkart?authSource=admin
       - REDIS_URI=redis://redis:6379
     depends_on:
       - mongodb
       - redis
- 
+    develop:
+      watch:
+        - path: ./TechKart-Server/package*.json
+          action: rebuild
+        - path: ./TechKart-Server/src
+          target: /app/src
+          action: sync
+
   client:
-    image: anujahirwar01/techkart-frontend:latest
+    build:
+      context: ./TechKart-Frontend
+      dockerfile: Dockerfile.dev
     container_name: techkart-client
-    restart: unless-stopped
     ports:
-      - "4173:4173"
+      - "5173:5173"
+    env_file:
+      - ./TechKart-Frontend/.env
     depends_on:
       - server
-  
+    develop:
+      watch:
+        - path: ./TechKart-Frontend/package*.json
+          action: rebuild
+        - path: ./TechKart-Frontend/src
+          target: /app/src
+          action: sync
+
 volumes:
   mongodb_data:
-     driver: local
+    driver: local
